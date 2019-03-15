@@ -1187,7 +1187,15 @@ int janus_http_handler(void *cls, struct MHD_Connection *connection, const char 
 				janus_network_address_string_buffer addr_buf;
 				if(janus_network_address_from_sockaddr((struct sockaddr *)conninfo->client_addr, &addr) == 0 &&
 						janus_network_address_to_string_buffer(&addr, &addr_buf) == 0) {
-					const char *ip = janus_network_address_string_from_buffer(&addr_buf);
+                                    
+                                        const char *ip = MHD_lookup_connection_value(connection,MHD_HEADER_KIND,"X-Forwarded-For");
+                                    
+//                                        if (ipFromHeader = NULL) {
+//                                            const char *ip = janus_network_address_string_from_buffer(&addr_buf);
+//                                        } else {
+//                                            const char *ip = *ipFromHeader;
+//                                        }
+                                      
 					json_object_set_new(info, "ip", json_string(ip));
 				}
 				uint16_t port = janus_http_sockaddr_to_port((struct sockaddr *)conninfo->client_addr);
